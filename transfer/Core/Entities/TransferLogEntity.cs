@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace transfer.Core.Entities
 {
     [Table("transferlog")]
-    public class TransferLog
+    public class TransferLogEntity
     {
         [Key]
         [Column("idtransferlog")]
@@ -14,7 +14,7 @@ namespace transfer.Core.Entities
         public int IdTransfer { get; set; }
 
         [ForeignKey("IdTransfer")]
-        public Transfer Transfer { get; set; }
+        public TransferEntity Transfer { get; set; }
 
         [Column("logmessage")]
         public string LogMessage { get; set; }

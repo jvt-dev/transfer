@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace transfer.Core.Entities
 {
     [Table("transferstatus")]
-    public class TransferStatus
+    public class TransferStatusEntity
     {
         [Key]
         [Column("idtransferstatus")]

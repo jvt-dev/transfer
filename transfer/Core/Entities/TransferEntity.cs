@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace transfer.Core.Entities
 {
     [Table("transfer")]
-    public class Transfer
+    public class TransferEntity
     {
         [Key]
         [Column("idtransfer")]
@@ -20,7 +20,7 @@ namespace transfer.Core.Entities
         public int IdTransferStatus { get; set; }
 
         [ForeignKey("IdTransferStatus")]
-        public TransferStatus TransferStatus { get; set; }
+        public TransferStatusEntity TransferStatus { get; set; }
 
         [Column("transfervalue")]
         public decimal TransferValue { get; set; }

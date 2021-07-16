@@ -15,7 +15,7 @@ namespace transfer.Infrastructure.Repository
 
         private readonly TransferContext _transferContext;
 
-        public int Create(TransferRequest transferRequest)
+        public TransferEntity Create(TransferRequest transferRequest)
         {
             var transfer = new TransferEntity
             {
@@ -27,7 +27,7 @@ namespace transfer.Infrastructure.Repository
             _transferContext.Transfer.Add(transfer);
             _transferContext.SaveChanges();
 
-            return transfer.IdTransfer;
+            return transfer;
         }
 
         public TransferEntity GetTransferByIdTransfer(int idTransfer)
