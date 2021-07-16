@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "transfer", "transfer\transfer.csproj", "{2230B247-E851-4234-B4EB-14791D78CE6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "transfer.Tests", "transfer.Tests\transfer.Tests.csproj", "{923AF514-2766-4B1D-A6E0-0CEAE1DAE16D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2230B247-E851-4234-B4EB-14791D78CE6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2230B247-E851-4234-B4EB-14791D78CE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2230B247-E851-4234-B4EB-14791D78CE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2230B247-E851-4234-B4EB-14791D78CE6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{923AF514-2766-4B1D-A6E0-0CEAE1DAE16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{923AF514-2766-4B1D-A6E0-0CEAE1DAE16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{923AF514-2766-4B1D-A6E0-0CEAE1DAE16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{923AF514-2766-4B1D-A6E0-0CEAE1DAE16D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3312931C-C902-462F-A00A-434D940A2DB9}
+	EndGlobalSection
+EndGlobal
