@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System;
-using transfer.Core.Transfer.Interface;
+using transfer.Core.Messaging.Interface;
 
-namespace transfer.Core.Transfer
+namespace transfer.Core.Messaging
 {
     public class Factory : IFactory
     {

@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace transfer.Core.Transfer.Interface
+namespace transfer.Core.Messaging.Interface
 {
     public interface IFactory
     {

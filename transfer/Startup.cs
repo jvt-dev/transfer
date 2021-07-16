@@ -4,9 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using transfer.Core.Messaging;
+using transfer.Core.Messaging.Interface;
 using transfer.Core.Transfer;
 using transfer.Core.Transfer.Interface;
 using transfer.Infrastructure.Data;
+using transfer.Infrastructure.Options;
 using transfer.Infrastructure.Repository;
 using transfer.Infrastructure.Repository.Interface;
 
@@ -33,14 +36,21 @@ namespace transfer
             services.AddDbContext<TransferContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("DbContext")));
 
+            services.AddHostedService<TransferenceConsumer>();
+
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMqConfig"));
+
             //Repository
             services.AddScoped<ITransferRepository, TransferRepository>();
             services.AddScoped<ITransferLogRepository, TransferLogRepository>();
             services.AddScoped<ITransferStatusRepository, TransferStatusRepository>();
 
-            //Core
+            //Transfer
             services.AddScoped<ITransfer, Transfer>();
+
+            //Messaging
             services.AddScoped<IFactory, Factory>();
+            services.AddScoped<ITransferenceProducer, TransferenceProducer>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
