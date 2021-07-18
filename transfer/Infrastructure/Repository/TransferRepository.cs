@@ -3,48 +3,96 @@ using transfer.Core.Transfer;
 using transfer.Infrastructure.Data;
 using transfer.Infrastructure.Repository.Interface;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace transfer.Infrastructure.Repository
 {
     public class TransferRepository : ITransferRepository
     {
-        public TransferRepository(TransferContext transferContext)
+        public TransferRepository(IServiceScopeFactory scopeFactory)
         {
-            _transferContext = transferContext;
+            _scopeFactory = scopeFactory;
         }
 
-        private readonly TransferContext _transferContext;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public TransferEntity Create(TransferRequest transferRequest)
+        public TransferEntity Create(TransferRequest transferRequest, int idTransferStatus = 5)
         {
             var transfer = new TransferEntity
             {
                 AccountOrigin = transferRequest.AccountOrigin,
                 AccountDestination = transferRequest.AccountDestination,
-                IdTransferStatus = 5,
+                IdTransferStatus = idTransferStatus,
                 TransferValue = transferRequest.Value
             };
-            _transferContext.Transfer.Add(transfer);
-            _transferContext.SaveChanges();
 
-            return transfer;
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
+                transferContext.Transfer.Add(transfer);
+                transferContext.SaveChanges();
+
+                return transfer;
+            }
         }
 
         public TransferEntity GetTransferByIdTransfer(int idTransfer)
         {
-            var query = from transfer in _transferContext.Transfer
-                        where transfer.IdTransfer.Equals(idTransfer)
-                        select new TransferEntity
-                        {
-                            IdTransfer = transfer.IdTransfer,
-                            AccountOrigin = transfer.AccountOrigin,
-                            AccountDestination = transfer.AccountDestination,
-                            IdTransferStatus = transfer.IdTransferStatus,
-                            TransferStatus = transfer.TransferStatus,
-                            TransferValue = transfer.TransferValue
-                        };
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
 
-            return query.FirstOrDefault();
+                var query = from transfer in transferContext.Transfer
+                            where transfer.IdTransfer.Equals(idTransfer)
+                            select new TransferEntity
+                            {
+                                IdTransfer = transfer.IdTransfer,
+                                AccountOrigin = transfer.AccountOrigin,
+                                AccountDestination = transfer.AccountDestination,
+                                IdTransferStatus = transfer.IdTransferStatus,
+                                TransferStatus = transfer.TransferStatus,
+                                TransferValue = transfer.TransferValue
+                            };
+
+                return query.FirstOrDefault();
+            }
+        }
+
+        public IEnumerable<TransferEntity> GetTransferByIdTransferStatus(int idTransferStatus = 5)
+        {
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
+
+                var query = from transfer in transferContext.Transfer
+                            where transfer.IdTransferStatus.Equals(idTransferStatus)
+                            select new TransferEntity
+                            {
+                                IdTransfer = transfer.IdTransfer,
+                                AccountOrigin = transfer.AccountOrigin,
+                                AccountDestination = transfer.AccountDestination,
+                                IdTransferStatus = transfer.IdTransferStatus,
+                                TransferStatus = transfer.TransferStatus,
+                                TransferValue = transfer.TransferValue
+                            };
+
+                return query.ToList();
+            }
+        }
+
+        public void UpdateIdStatus(TransferEntity transferEntity, int idTransferStatus)
+        {
+            transferEntity.IdTransferStatus = idTransferStatus;
+
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
+
+                transferContext.Attach(transferEntity);
+                transferContext.Entry(transferEntity).Property(t => t.IdTransferStatus).IsModified = true;
+                transferContext.SaveChanges();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using transfer.Core.Messaging.Interface;
+﻿using transfer.Core.Account.Interface;
+using transfer.Core.Entities;
 using transfer.Core.Transfer.Interface;
 using transfer.Exceptions;
 using transfer.Infrastructure.Repository.Interface;
@@ -7,18 +8,18 @@ namespace transfer.Core.Transfer
 {
     public class Transfer : ITransfer
     {
-        public Transfer(ITransferRepository transferRepository, ITransferLogRepository transferLogRepository, ITransferStatusRepository transferStatusRepository, ITransferenceProducer transferenceProducer)
+        public Transfer(IAccount account, ITransferRepository transferRepository, ITransferLogRepository transferLogRepository, ITransferStatusRepository transferStatusRepository)
         {
+            _account = account;
             _transferRepository = transferRepository;
             _transferLogRepository = transferLogRepository;
             _transferStatusRepository = transferStatusRepository;
-            _transferenceProducer = transferenceProducer;
         }
 
+        private readonly IAccount _account;
         private readonly ITransferRepository _transferRepository;
         private readonly ITransferLogRepository _transferLogRepository;
         private readonly ITransferStatusRepository _transferStatusRepository;
-        private readonly ITransferenceProducer _transferenceProducer;
 
         public TransferDto Index(int idTransfer)
         {
@@ -45,10 +46,25 @@ namespace transfer.Core.Transfer
                 throw new InvalidValue("Value must be greater than zero");
 
             var transfer = _transferRepository.Create(transferRequest);
-            _transferLogRepository.Create(transfer.IdTransfer, "");
-            _transferenceProducer.Publish(transfer);
+            _transferLogRepository.Create(transfer.IdTransfer);
 
             return transfer.IdTransfer;
+        }
+
+        public void Update(TransferEntity transferEntity)
+        {
+            var transferRequest = new TransferRequest
+            {
+                AccountOrigin = transferEntity.AccountOrigin,
+                AccountDestination = transferEntity.AccountDestination,
+                Value = transferEntity.TransferValue
+            };
+
+            var accountDto = _account.TransferToDestination(transferRequest);
+            _transferRepository.UpdateIdStatus(transferEntity, accountDto.IdTransferStatus);
+
+            var transferLogEntity = _transferLogRepository.GetTransferLogByIdTransfer(transferEntity.IdTransfer);
+            _transferLogRepository.UpdateLogMessage(transferLogEntity, accountDto.Message);
         }
     }
 }

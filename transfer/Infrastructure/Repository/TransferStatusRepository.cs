@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 using transfer.Core.Entities;
 using transfer.Infrastructure.Data;
 using transfer.Infrastructure.Repository.Interface;
@@ -7,24 +8,29 @@ namespace transfer.Infrastructure.Repository
 {
     public class TransferStatusRepository : ITransferStatusRepository
     {
-        public TransferStatusRepository(TransferContext transferContext)
+        public TransferStatusRepository(IServiceScopeFactory scopeFactory)
         {
-            _transferContext = transferContext;
+            _scopeFactory = scopeFactory;
         }
 
-        private readonly TransferContext _transferContext;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         public TransferStatusEntity GetTransferStatusByIdTransferStatus(int idTransferStatus)
         {
-            var query = from transferStatus in _transferContext.TransferStatus
-                        where transferStatus.IdTransferStatus.Equals(idTransferStatus)
-                        select new TransferStatusEntity
-                        {
-                            IdTransferStatus = transferStatus.IdTransferStatus,
-                            Status = transferStatus.Status
-                        };
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
 
-            return query.FirstOrDefault();
+                var query = from transferStatus in transferContext.TransferStatus
+                            where transferStatus.IdTransferStatus.Equals(idTransferStatus)
+                            select new TransferStatusEntity
+                            {
+                                IdTransferStatus = transferStatus.IdTransferStatus,
+                                Status = transferStatus.Status
+                            };
+
+                return query.FirstOrDefault();
+            }
         }
     }
 }

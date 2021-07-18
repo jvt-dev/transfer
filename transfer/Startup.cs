@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using transfer.Core.Account;
+using transfer.Core.Account.Interface;
 using transfer.Core.Messaging;
-using transfer.Core.Messaging.Interface;
+using transfer.Core.Services;
+using transfer.Core.Services.Interface;
 using transfer.Core.Transfer;
 using transfer.Core.Transfer.Interface;
 using transfer.Infrastructure.Data;
@@ -37,20 +40,25 @@ namespace transfer
                 options => options.UseNpgsql(Configuration.GetConnectionString("DbContext")));
 
             services.AddHostedService<TransferenceConsumer>();
+            services.AddHostedService<TransferenceProducer>();
 
             services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMqConfig"));
+            services.Configure<AccountServiceConfiguration>(Configuration.GetSection("AccountServiceConfig"));
 
             //Repository
-            services.AddScoped<ITransferRepository, TransferRepository>();
-            services.AddScoped<ITransferLogRepository, TransferLogRepository>();
-            services.AddScoped<ITransferStatusRepository, TransferStatusRepository>();
+            services.AddSingleton<ITransferRepository, TransferRepository>();
+            services.AddSingleton<ITransferLogRepository, TransferLogRepository>();
+            services.AddSingleton<ITransferStatusRepository, TransferStatusRepository>();
 
             //Transfer
-            services.AddScoped<ITransfer, Transfer>();
+            services.AddSingleton<ITransfer, Transfer>();
 
-            //Messaging
-            services.AddScoped<IFactory, Factory>();
-            services.AddScoped<ITransferenceProducer, TransferenceProducer>();
+            //Account
+            services.AddSingleton<IAccount, Account>();
+
+            //Services
+            services.AddHttpClient<IAccountService, AccountService>();
+            services.AddSingleton<IAccountService, AccountService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
