@@ -9,6 +9,6 @@ namespace transfer.Infrastructure.Repository.Interface
         public TransferEntity Create(TransferRequest transferRequest, int idTransferStatus = 5);
         public TransferEntity GetTransferByIdTransfer(int idTransfer);
         public IEnumerable<TransferEntity> GetTransferByIdTransferStatus(int idTransferStatus = 5);
-        public void UpdateIdStatus(TransferEntity transferEntity, int idTransferStatus);
+        public void UpdateIdTransferStatus(TransferEntity transferEntity, int idTransferStatus);
     }
 }

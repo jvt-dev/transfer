@@ -61,7 +61,7 @@ namespace transfer.Core.Transfer
             };
 
             var accountDto = _account.TransferToDestination(transferRequest);
-            _transferRepository.UpdateIdStatus(transferEntity, accountDto.IdTransferStatus);
+            _transferRepository.UpdateIdTransferStatus(transferEntity, accountDto.IdTransferStatus);
 
             var transferLogEntity = _transferLogRepository.GetTransferLogByIdTransfer(transferEntity.IdTransfer);
             _transferLogRepository.UpdateLogMessage(transferLogEntity, accountDto.Message);

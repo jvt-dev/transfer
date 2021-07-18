@@ -81,15 +81,14 @@ namespace transfer.Infrastructure.Repository
             }
         }
 
-        public void UpdateIdStatus(TransferEntity transferEntity, int idTransferStatus)
+        public void UpdateIdTransferStatus(TransferEntity transferEntity, int idTransferStatus)
         {
-            transferEntity.IdTransferStatus = idTransferStatus;
-
             using (var scope = _scopeFactory.CreateScope())
             {
                 var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
 
                 transferContext.Attach(transferEntity);
+                transferEntity.IdTransferStatus = idTransferStatus;
                 transferContext.Entry(transferEntity).Property(t => t.IdTransferStatus).IsModified = true;
                 transferContext.SaveChanges();
             }

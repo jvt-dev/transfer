@@ -52,12 +52,12 @@ namespace transfer.Infrastructure.Repository
 
         public void UpdateLogMessage(TransferLogEntity transferLogEntity, string logMessage)
         {
-            transferLogEntity.LogMessage = logMessage;
-
             using (var scope = _scopeFactory.CreateScope())
             {
                 var transferContext = scope.ServiceProvider.GetRequiredService<TransferContext>();
+
                 transferContext.Attach(transferLogEntity);
+                transferLogEntity.LogMessage = logMessage;
                 transferContext.Entry(transferLogEntity).Property(t => t.LogMessage).IsModified = true;
                 transferContext.SaveChanges();
             }
