@@ -1,4 +1,5 @@
-﻿using transfer.Core.Account.Interface;
+﻿using Microsoft.Extensions.Logging;
+using transfer.Core.Account.Interface;
 using transfer.Core.Entities;
 using transfer.Core.Transfer.Interface;
 using transfer.Exceptions;
@@ -8,15 +9,17 @@ namespace transfer.Core.Transfer
 {
     public class Transfer : ITransfer
     {
-        public Transfer(IAccount account, ITransferRepository transferRepository, ITransferLogRepository transferLogRepository, ITransferStatusRepository transferStatusRepository)
+        public Transfer(IAccount account, ITransferRepository transferRepository, ITransferLogRepository transferLogRepository, ITransferStatusRepository transferStatusRepository, ILogger<Transfer> logger)
         {
             _account = account;
+            _logger = logger;
             _transferRepository = transferRepository;
             _transferLogRepository = transferLogRepository;
             _transferStatusRepository = transferStatusRepository;
         }
 
         private readonly IAccount _account;
+        private readonly ILogger _logger;
         private readonly ITransferRepository _transferRepository;
         private readonly ITransferLogRepository _transferLogRepository;
         private readonly ITransferStatusRepository _transferStatusRepository;
@@ -36,6 +39,8 @@ namespace transfer.Core.Transfer
                 Status = transferStatus.Status,
                 Message = transferLog.LogMessage
             };
+
+            _logger.LogInformation($"{dto}, Created At: {System.DateTime.Now}");
 
             return dto;
         }
