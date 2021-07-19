@@ -15,12 +15,12 @@ namespace transfer.Infrastructure.Repository
 
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public void Create(int idTransfer, string message = "")
+        public void Create(int idTransfer)
         {
             var transferLog = new TransferLogEntity
             {
                 IdTransfer = idTransfer,
-                LogMessage = message
+                LogMessage = ""
             };
 
             using (var scope = _scopeFactory.CreateScope())

@@ -9,7 +9,7 @@ namespace transfer.Core.Transfer
 {
     public class Transfer : ITransfer
     {
-        public Transfer(IAccount account, ITransferRepository transferRepository, ITransferLogRepository transferLogRepository, ITransferStatusRepository transferStatusRepository, ILogger<Transfer> logger)
+        public Transfer(IAccount account, ILogger<Transfer> logger, ITransferRepository transferRepository, ITransferLogRepository transferLogRepository, ITransferStatusRepository transferStatusRepository)
         {
             _account = account;
             _logger = logger;

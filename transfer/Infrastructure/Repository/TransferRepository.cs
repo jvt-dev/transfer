@@ -17,13 +17,13 @@ namespace transfer.Infrastructure.Repository
 
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public TransferEntity Create(TransferRequest transferRequest, int idTransferStatus = 5)
+        public TransferEntity Create(TransferRequest transferRequest)
         {
             var transfer = new TransferEntity
             {
                 AccountOrigin = transferRequest.AccountOrigin,
                 AccountDestination = transferRequest.AccountDestination,
-                IdTransferStatus = idTransferStatus,
+                IdTransferStatus = 5,
                 TransferValue = transferRequest.Value
             };
 

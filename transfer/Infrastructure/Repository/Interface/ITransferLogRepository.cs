@@ -4,7 +4,7 @@ namespace transfer.Infrastructure.Repository.Interface
 {
     public interface ITransferLogRepository
     {
-        public void Create(int idTransfer, string message = "");
+        public void Create(int idTransfer);
         public TransferLogEntity GetTransferLogByIdTransfer(int idTransfer);
         public void UpdateLogMessage(TransferLogEntity transferLogEntity, string logMessage);
     }
