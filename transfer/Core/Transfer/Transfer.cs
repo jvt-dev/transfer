@@ -40,7 +40,7 @@ namespace transfer.Core.Transfer
                 Message = transferLog.LogMessage
             };
 
-            _logger.LogInformation($"{dto}, Created At: {System.DateTime.Now}");
+            _logger.LogInformation($"Status: {dto.Status}, Message: {dto.Message}, Created at: {System.DateTime.Now}");
 
             return dto;
         }
